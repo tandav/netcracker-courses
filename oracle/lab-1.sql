@@ -1,0 +1,149 @@
+-- task 1 DONE
+SELECT  * FROM DEPARTMENTS;
+
+-- task 2 DONE
+SELECT  c1.CUSTOMER_ID,
+        c1.CUST_FIRST_NAME || ' ' || C1.CUST_LAST_NAME  AS NAME,
+        c1.CUST_EMAIL
+    FROM CUSTOMERS c1;
+
+-- task 3 DONE
+SELECT  LAST_NAME,
+        FIRST_NAME,
+        JOB_ID,
+        EMAIL,
+        PHONE_NUMBER,
+        SALARY,
+        CASE
+          WHEN SALARY * 12 BETWEEN 100000 AND 150000 THEN SALARY * 0.3 -- typo in pdf, should be 0.7 (там выводится отчесление, а нужно вывести зарплату)
+          WHEN SALARY * 12 > 150000 THEN SALARY * 0.35 -- typo in pdf, should be 0.65 (там выводится отчесление, а нужно вывести зарплату)
+        END AS SALARY
+  FROM  EMPLOYEES
+  WHERE SALARY * 12 BETWEEN 100000 AND 200000
+  ORDER BY JOB_ID;
+
+-- task 4 DONE
+SELECT  COUNTRY_ID AS "Код страны",
+        COUNTRY_NAME AS "Название страны"
+  FROM  COUNTRIES
+  WHERE COUNTRY_ID IN ('DE', 'IT', 'RU')
+  ORDER BY COUNTRY_NAME;
+
+-- task 5 DONE
+SELECT  FIRST_NAME || ' ' || LAST_NAME
+  FROM  EMPLOYEES
+  WHERE LAST_NAME LIKE '_a%' AND LOWER(FIRST_NAME) LIKE '%d%'
+
+-- task 6 DONE
+SELECT  *
+  FROM  EMPLOYEES
+  WHERE length(FIRST_NAME) < 5 OR length(LAST_NAME) < 5
+  ORDER BY length(FIRST_NAME) + length(LAST_NAME), length(LAST_NAME), length(FIRST_NAME);
+
+-- task 7 DONE
+SELECT  JOB_ID,
+        JOB_TITLE,
+        ROUND((MIN_SALARY + MAX_SALARY) / 2 * 0.82, -2) AS AVG_SALARY
+  FROM  JOBS
+  ORDER BY AVG_SALARY DESC, JOB_ID;
+
+-- task 8 DONE
+SELECT  CUST_LAST_NAME,
+        CUST_FIRST_NAME,
+        CASE
+          WHEN CREDIT_LIMIT >= 3500 THEN 'A'
+          WHEN CREDIT_LIMIT >= 1000 THEN 'B'
+          ELSE 'C'
+        END
+        AS CATEGORY,
+        CASE
+           WHEN CREDIT_LIMIT >= 3500 THEN 'Внимание, VIP-клиенты'
+        END AS COMMENTS
+  FROM CUSTOMERS
+  ORDER BY CATEGORY, CUST_LAST_NAME;
+
+-- task 9 DONE
+SELECT  DECODE(EXTRACT(MONTH FROM ORDER_DATE),
+   '1', 'Январь',
+   '2', 'Февраль',
+   '3', 'Март',
+   '4', 'Апрель',
+   '5', 'Май',
+   '6', 'Июнь',
+   '7', 'Июль',
+   '8', 'Август',
+   '9', 'Сентябрь',
+  '10', 'Октябрь',
+  '11', 'Ноябрь',
+  '12', 'Декабрь') AS MONTH
+  FROM  ORDERS
+  WHERE EXTRACT(YEAR FROM ORDER_DATE) = 1998
+  GROUP BY EXTRACT(MONTH FROM ORDER_DATE)
+  ORDER BY EXTRACT(MONTH FROM ORDER_DATE);
+
+-- task 10 DONE but ~
+SELECT  DISTINCT TO_CHAR(ORDER_DATE, 'Month', 'NLS_DATE_LANGUAGE = RUSSIAN') AS MONTH -- MM
+  FROM  ORDERS
+  WHERE EXTRACT(YEAR FROM ORDER_DATE) = 1998; -- or: TO_CHAR(ORDER_DATE, 'YYYY') = '1998'
+--   ORDER BY TO_CHAR(ORDER_DATE, 'Month', 'NLS_DATE_LANGUAGE = RUSSIAN'); -- bad alphabetical order, ,
+--   ORDER BY TO_CHAR(ORDER_DATE, 'MM', 'NLS_DATE_LANGUAGE = RUSSIAN');
+
+-- task 11 FAIL
+SELECT  ROWNUM ||'.'|| TO_CHAR(SYSDATE, 'MM.YY, DAY') AS DT,
+  CASE
+    WHEN TO_CHAR(SYSDATE, 'DAY') = 'ds' THEN 'SHIT'
+  END AS COMMENTS,
+  TO_CHAR(SYSDATE, 'D')
+  FROM ORDERS
+  WHERE ROWNUM <= 31;
+
+-- task 12 DONE
+SELECT  EMPLOYEE_ID,
+        LAST_NAME ||' '|| FIRST_NAME  AS EMP_NAME,
+        JOB_ID,
+        SALARY,
+        COMMISSION_PCT
+  FROM EMPLOYEES
+  WHERE COMMISSION_PCT IS NOT NULL
+  ORDER BY COMMISSION_PCT DESC, EMPLOYEE_ID;
+
+-- task 13 FAIL
+-- http://sqlhints.com/2014/03/08/how-to-get-quarterly-data-in-sql-server/
+SELECT  EXTRACT(YEAR FROM ORDER_DATE) AS YEAR,
+        SUM(ORDER_TOTAL) AS YEAR_SUM,
+
+        SUM(Q1.ORDER_TOTAL CASE WHEN EXTRACT(MONTH FROM ORDER_DATE) = 1 THEN 1 ELSE 1 END AS Q1)
+--         CASE WHEN EXTRACT(MONTH FROM ord.ORDER_DATE) IN (1, 2, 3, 4) THEN SUM(ord.ORDER_TOTAL) ELSE 1 END AS Q1
+
+--         CASE
+--           WHEN EXTRACT(MONTH FROM ORDER_DATE) IN (1, 2, 3, 4) THEN SUM(ORDER_TOTAL) ELSE NULL
+--         END AS Q1
+  FROM  ORDERS ord
+  WHERE EXTRACT(YEAR FROM ORDER_DATE) BETWEEN 1995 AND 2000
+  GROUP BY
+    EXTRACT(YEAR FROM ORDER_DATE),
+    EXTRACT(MONTH FROM ORDER_DATE)
+  ORDER BY EXTRACT(YEAR FROM ORDER_DATE);
+
+-- task 14 DONE, But wrong ORDER BY
+SELECT  PRODUCT_ID,
+        PRODUCT_NAME,
+        12 * EXTRACT(YEAR FROM WARRANTY_PERIOD) + EXTRACT(MONTH FROM WARRANTY_PERIOD) AS WARRANTY_MONTHS,
+        LIST_PRICE,
+--         REGEXP_REPLACE(PRODUCT_NAME, '[0-9]+\s*(MB|GB)', ) as RAM,
+        CATALOG_URL
+  FROM  PRODUCT_INFORMATION
+  WHERE REGEXP_LIKE(PRODUCT_NAME, '[0-9]+\s*(mb|gb)', 'i') AND NOT
+        REGEXP_LIKE(PRODUCT_NAME, '^hd', 'i') AND NOT
+        REGEXP_LIKE(SUBSTR(PRODUCT_DESCRIPTION, 1, 30), 'disk|drive|hard', 'i')
+  ORDER BY LIST_PRICE;
+--   ORDER BY REGEXP_REPLACE(PRODUCT_NAME, '[0-9]+\s*(MB|GB)') LIST_PRICE;
+
+-- task 15 FAIL
+-- SELECT  '21:30' - to_char(TIMESTAMP) AS MINUTES
+-- SELECT  current_date, current_date + to_date('21:30')
+--   FROM  COUNTRIES
+--   WHERE COUNTRY_ID = 'AR';
+
+SELECT sysdate, ascii('b'), tr
+    FROM dual;
