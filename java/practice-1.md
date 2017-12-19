@@ -51,4 +51,116 @@ target folder - папка куда все компилится - в `.gitignore
 - [MaickelVRN/NCLab](https://github.com/MaickelVRN/NCLab) - nfv nbgf 
 
 ---
+
 javadoc прописывать для методов
+
+---
+
+SORT
+
+- где классы - юзать интерфейсы
+- сортировка
+    - interface PersonSorter
+        - там метод void PersonSort
+    - в PersonRepo - метод void sort - имплементит этот интерфейс
+    - класс bubblesorter implrments void sort 
+- Юзать пакетны, не кидать все в один пакет
+
+---
+
+В файле ресурсов (`src/main/resources`)создать файл с расширением config.proprties и разобраться с ним что это и как работает
+
+там `sorter = bubble` строчка
+
+Написать класс singleton congigurator - в этом классе 
+
+---
+SEARCH
+
+interface PersonChecker 
+
+И классы
+FioPersonChecker implements PersonChecker
+
+В классе PersonRepo - метод search (принимает PersonChecker, value) (value - значение по которому сравнивать например фамилия если FIoPersonChecker) Н
+в начале пустой массив PersonRepo result
+nfv внутри for  по всем: PersonChecker.check. Типа если удовлетворяет, то возвращаешь result - массив элементов удовлетворяющих Checker
+
+---
+
+## PersonRepo
+```
+expand_repo
+add_person
+delete_by_index
+delete_by_id
+sort
+get_person_by_id
+search
+```
+
+---
+
+- add logging
+    - просто где нибудь добавить
+    - `DEBUG` - какие методы вызываются
+    - на уровне `INFO` - что массив расширился
+    - если какие-то проблемы / exceptions - то `ERROR`
+
+---
+
+- интерфейс репки - там базовые методы 
+- потом абстрактный класс от этого репозитория 
+- потом от этого репозитория создаются PersonRepository, CarRepository
+
+Rep<T>
+
+---
+
+короче сначала доделать 
+
+---
+
+# переделать все юзая Generics
+нужно все что сделали - переделать с использованием generics. Добавить еще одну сущность `машина` и еще один репозиторий автомобилей `CarRepository`.
+
+вынести общие методы в абстрактный класс `repository`. 
+
+теперь короче persons должны храниться не в массиве а в `List`
+- сортировку переделать теперь юзать collection-sort
+
+
+---
+
+person - DONE
+id, last-name, birthdate
+getters and setters for all, constructor
+
+Repo
+<!-- Person[] repo = new Person[16]; -->
+<!-- int numberOfElements = 0; -->
+<!-- начальное значение (длина репки - 16? / захардкодить) -->
+<!-- - get/set by index -->
+<!-- - add -->
+<!-- - delete by index -->
+- searchBy (много разных)
+- sort (много разных)
+- getters and setters for all, constructor
+- generics 
+
+---
+
+My Ideas
+
+Abstract Class
+sort
+    sorter: bubble | shell
+    comparator: sortBy<T>
+
+Checker<T> - чекер для любого типа
+Checker<Person> - чекер для Person
+
+RealClass eg. PersonRepo
+sort byName, byId, ...
+
+---
