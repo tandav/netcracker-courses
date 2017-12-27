@@ -1,7 +1,5 @@
 package checkers.Person;
-
-import ru.vsu.entity.entityImpl.Person;
-import ru.vsu.searcher.PersonChecker;
+import entities.person.Person;
 
 public class LastName implements Checker {
     public boolean check(Person p, Object value) {

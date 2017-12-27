@@ -7,10 +7,12 @@ public class Main {
         Person p2 = new Person(2, "Abc", 2000, 7, 23);
         Person p3 = new Person(3, "Marshall", 2000, 7, 23);
 
-        System.out.println(p1.getAge());
         PersonRepository pr = new PersonRepository();
-        pr.addPerson(p1);
-        pr.addPerson(p2);
-        System.out.println(pr);
+
+        pr.add(p1);
+        pr.add(p2);
+        pr.add(p3);
+
+        System.out.println(pr.get(1).getLastName());
     }
 }

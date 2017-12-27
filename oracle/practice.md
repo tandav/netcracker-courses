@@ -43,4 +43,3 @@ SELECT column1 aS
     - [sql - Delete all contents in a schema in Oracle - Stack Overflow](https://stackoverflow.com/questions/29926262/delete-all-contents-in-a-schema-in-oracle)
 - мб залить на dockerhub image
     - после того как спрошу у соломатина как все дропнуть и заного записать в SQL developer
-

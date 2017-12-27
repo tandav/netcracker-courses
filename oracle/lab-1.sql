@@ -103,8 +103,8 @@ SELECT  DECODE(
 SELECT DISTINCT TO_CHAR(o.ORDER_DATE, 'Month', 'nls_date_language=russian') AS MONTH
 --   ORDER_DATE -- MM
   FROM  ORDERS o
-  WHERE TO_CHAR(o.ORDER_DATE, 'YYYY', 'nls_date_language=russian') = 1998
---   WHERE date'1998-01-01' <= o.ORDER_DATE AND o.ORDER_DATE < date'1999-01-01'
+--   WHERE TO_CHAR(o.ORDER_DATE, 'YYYY', 'nls_date_language=russian') = 1998
+  WHERE date'1998-01-01' <= o.ORDER_DATE AND o.ORDER_DATE < date'1999-01-01'
 --   ORDER BY EXTRACT(MONTH FROM ORDER_DATE);
   ORDER BY to_date(to_char(o.ORDER_DATE, 'Month', 'nls_date_language=russian'), 'Month'); -- bad alphabetical order, ,
 
@@ -215,9 +215,9 @@ SELECT  p.PRODUCT_ID,
   WHERE REGEXP_LIKE(p.PRODUCT_NAME, '(\d+)\s*(mb|gb)', 'i') AND NOT
         REGEXP_LIKE(p.PRODUCT_NAME, '^hd', 'i') AND NOT
         REGEXP_LIKE(SUBSTR(p.PRODUCT_DESCRIPTION, 1, 30), 'disk|drive|hard', 'i')
-  ORDER BY  regexp_substr(p.PRODUCT_NAME, '(\d+)\s*(mb|gb)', 1, 1, 'i', 1)*
-              decode(lower(regexp_substr(p.PRODUCT_NAME, '(\d+)\s*(mb|gb)', 1, 1, 'i', 2)), 'mb', 1, 1024) DESC,
-            LIST_PRICE;
+  ORDER BY  regexp_substr(p.PRODUCT_NAME, '(\d+)\s*(mb|gb)', 1, 1, 'i', 1) *
+            decode(lower(regexp_substr(p.PRODUCT_NAME, '(\d+)\s*(mb|gb)', 1, 1, 'i', 2)), 'mb', 1, 1024) DESC,
+        LIST_PRICE;
 
 
 -- task 15 DONE -----------------------------------------------------

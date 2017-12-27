@@ -8,9 +8,9 @@ public class Person {
     LocalDate birthDate;
 
     public Person(int id, String last_name, int year, int month_of_year, int day_of_month) {
-        id = id;
-        birthDate = new LocalDate(year, month_of_year, day_of_month);
-        last_name = last_name;
+        this.id = id;
+        this.birthDate = new LocalDate(year, month_of_year, day_of_month);
+        this.lastName = last_name;
     }
 
     public int getId() {
@@ -35,5 +35,9 @@ public class Person {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public int getAge() {
+        return Years.yearsBetween(this.birthDate, LocalDate.now()).getYears();
     }
 }

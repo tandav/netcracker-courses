@@ -4,9 +4,14 @@ import sorters.Sorter;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
+/**
+ * abstract class for repository
+ * @param <T> class of elements in the repo
+ */
 public abstract class AbstractRepository<T> implements Repository<T> {
     private int numberOfElements = 0;
     private T[] repo;
+
 
     /**
      * Constructor
@@ -18,6 +23,7 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         this.repo = tempRepo;
     }
 
+
     /**
      * Constructor with initial length = 16
      * @param elementType type of elements to store in repo
@@ -26,6 +32,11 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         this(elementType, 16);
     }
 
+
+    /**
+     * add an element to repository
+     * @param element an element to be added
+     */
     public void add(T element) {
         if (this.numberOfElements == this.repo.length)
             this.expand();
@@ -33,6 +44,11 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         this.numberOfElements += 1;
     }
 
+
+    /**
+     * deletes an element from repo by given index
+     * @param index an index of element to be deleted
+     */
     public void delete(int index) {
         if (index < this.repo.length) {
             System.arraycopy(this.repo, index + 1, this.repo, index, this.repo.length - 1 - index);
@@ -44,6 +60,12 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         }
     }
 
+
+    /**
+     *
+     * @param index
+     * @return element of repo by given index
+     */
     public T get(int index) {
         if (index < this.repo.length) {
             return (T) this.repo[index];
@@ -54,24 +76,10 @@ public abstract class AbstractRepository<T> implements Repository<T> {
         }
     }
 
-    /** // TODO: move to actual classes and del from here
-     * uses comparators
+
+    /**
+     * expands repo when it is full
      */
-    // public void sort() {
-    //     Sorter<T> bubbleSorter = new BubbleSorter<T>(); // TODO: read from application.properties
-    //
-    //     // sorter
-    //     // comparator
-    // }
-
-
-    /** // TODO: move to actual classes and del from here
-     * uses checkers
-     */
-    // public void search() {
-    //
-    // }
-
     private void expand() {
         this.repo = Arrays.copyOf(this.repo, this.repo.length * 2);
     }
